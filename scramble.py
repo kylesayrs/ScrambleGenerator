@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union
 
 import os
 import re
@@ -19,18 +19,18 @@ from utils import (
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--category", type=str, default=None)
-parser.add_argument("--num_words", type=int, default=5)
-parser.add_argument("--min_word_length", type=int, default=5)
+parser.add_argument("--category", type=str, default=None, help="Category to create scramble for. Defaults to random category")
+parser.add_argument("--num_words", type=int, default=5, help="Number of words in scramble")
+parser.add_argument("--min_word_length", type=int, default=5, help="Minimum word length of words appearing in scramble")
 
-parser.add_argument("--num_tile_sets", type=int, default=2)
+parser.add_argument("--num_tile_sets", type=int, default=2, help="Multiplier factor for tile set distribution")
 
 parser.add_argument("--category_sets_path", type=str, default="category_sets.pkl")
 parser.add_argument("--tile_set_path", type=str, default="tile_set_distribution.json")
 parser.add_argument("--scramble_dir", type=str, default="scrambles")
 
 
-def get_score(word: str, scramble: List[str], tile_set_distribution: Dict[str, int]) -> float:
+def get_score(word: str, scramble: List[str], tile_set_distribution: Dict[str, int]) -> Union[float, None]:
     new_scramble = scramble + [word]
 
     # calculate character frequency
@@ -39,7 +39,7 @@ def get_score(word: str, scramble: List[str], tile_set_distribution: Dict[str, i
     # check for overflow
     for char, freq in char_freq.items():
         if freq > tile_set_distribution[char.upper()]:
-            return numpy.ninf
+            return None
 
     # score is negative gini coeficient
     gini_score = (1 - gini(char_freq)) ** 10
@@ -56,7 +56,7 @@ def get_scores(
     scores = []
     for word in words:
         score = get_score(word, scramble, tile_set_distribution)
-        if score != numpy.ninf:
+        if score is not None:
             _words.append(word)
             scores.append(score)
 
@@ -100,6 +100,9 @@ if __name__ == "__main__":
     tile_set_distribution = multiply_distribution(tile_set_distribution, args.num_tile_sets)
 
     # get a random category
+    if len(category_sets.keys()) <= 0:
+        raise ValueError("Category sets cannot be empty")
+    
     category = (
         numpy.random.choice(list(category_sets.keys()))
         if args.category is None

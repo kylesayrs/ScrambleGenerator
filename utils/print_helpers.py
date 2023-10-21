@@ -1,4 +1,20 @@
+from typing import Dict, Set
+
 import os
+import json
+
+
+def print_category_sets(category_sets: Dict[str, Set[str]]):
+    data = {
+        category: {
+            "num_words": len(words),
+            "min_length": min([len(word) for word in words]),
+            "max_length": max([len(word) for word in words]),
+        }
+        for category, words in category_sets.items()
+    }
+
+    print(json.dumps(data, indent=4))
 
 
 class Node:
