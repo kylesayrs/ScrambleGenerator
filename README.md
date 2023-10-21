@@ -43,5 +43,48 @@ options:
 ```bash
 export OPENAI_API_KEY="yourkeyhere"
 python3 chat.py --category="harry potter characters"
+    {}
+    100%|███████████████████████████████████████████████████████████████████| 5/5 [00:16<00:00,  3.36s/it]
+    {
+        "harry potter characters": {
+            "num_words": 25,
+            "min_length": 3,
+            "max_length": 18
+        }
+    }
 python3 scramble.py --category="harry potter characters"
+    ---------------------------------------------------------------
+    | Category: harry potter characters                           |
+    | Answer path: scrambles/harry potter characters_b86de819.txt |
+    | Gini Coeficient: 0.556                                      |
+    | Characters: {                                               |
+    |     "a": 3,                                                 |
+    |     "b": 2,                                                 |
+    |     "c": 0,                                                 |
+    |     "d": 4,                                                 |
+    |     "e": 8,                                                 |
+    |     "f": 0,                                                 |
+    |     "g": 5,                                                 |
+    |     "h": 1,                                                 |
+    |     "i": 2,                                                 |
+    |     "j": 0,                                                 |
+    |     "k": 0,                                                 |
+    |     "l": 4,                                                 |
+    |     "m": 1,                                                 |
+    |     "n": 3,                                                 |
+    |     "o": 5,                                                 |
+    |     "p": 0,                                                 |
+    |     "q": 0,                                                 |
+    |     "r": 4,                                                 |
+    |     "s": 2,                                                 |
+    |     "t": 0,                                                 |
+    |     "u": 4,                                                 |
+    |     "v": 1,                                                 |
+    |     "w": 1,                                                 |
+    |     "x": 0,                                                 |
+    |     "y": 2,                                                 |
+    |     "z": 0                                                  |
+    | }                                                           |
+    ---------------------------------------------------------------
 ```
+![Example Distribution](assets/example_distribution.png)
