@@ -2,19 +2,27 @@ from typing import List, Dict, Set
 
 import re
 import os
+import tqdm
 import json
 import pickle
 import openai
+import argparse
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--category", type=str, default=None)
+parser.add_argument("--num_iterations", type=int, default=5)
+parser.add_argument("--temperature", type=int, default=1.1)
 
-def get_category_response(category: str) -> str:
+
+def get_category_response(category: str, temperature: float) -> str:
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a helpful assistant who lists words separated by commas"},
             {"role": "user", "content": f"List at least ten words belonging to the category '{category}' separated by commas"}
-        ]
+        ],
+        temperature=temperature  # default 1, higher = crazier
     )
 
     return ",".join([
@@ -44,11 +52,11 @@ def write_category_sets(file_path: str, category_sets: Dict[str, Set[str]]):
         pickle.dump(category_sets, file)
 
 
-def grow_category_list(category_sets: Dict[str, Set[str]], category: str):
+def grow_category_list(category_sets: Dict[str, Set[str]], category: str, temperature: float):
     if not category in category_sets:
         category_sets[category] = set()
 
-    response = get_category_response(category)
+    response = get_category_response(category, temperature)
 
     new_words = parse_word_list(response)
 
@@ -69,13 +77,15 @@ def print_category_sets(category_sets: Dict[str, Set[str]]):
 
 
 if __name__ == "__main__":
-    all_categories = ["Seasame Street Characters"]
+    args = parser.parse_args()
 
     category_sets = load_category_sets("category_sets.pkl")
     print_category_sets(category_sets)
+    if args.category is None:
+        exit(0)
 
-    for category in all_categories:
-        grow_category_list(category_sets, category)
+    for _ in tqdm.tqdm(range(args.num_iterations)):
+        grow_category_list(category_sets, args.category, args.temperature)
 
     print_category_sets(category_sets)
     write_category_sets("category_sets.pkl", category_sets)
