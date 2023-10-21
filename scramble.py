@@ -72,7 +72,7 @@ def get_scramble(words_set: set, num_words: int, tile_set_distribution: Dict[str
         words, scores = get_scores(words, scramble, tile_set_distribution)
         if len(words) <= 0:
             print("Ran out of viable words")
-            return words
+            return scramble
 
         scores_normed = numpy.array(scores) / sum(scores)
 
