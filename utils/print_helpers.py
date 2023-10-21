@@ -49,11 +49,11 @@ def print_in_box(message: str):
 
     max_line_length = max([len(line) for line in lines])
 
-    print("".join(["-"] * (max_line_length + 3)))
+    print("".join(["-"] * (max_line_length + 4)))
     for line in lines:
         print("| ", end="")
         print(line, end="")
         padding = max_line_length - len(line)
         print("".join([" "] * padding), end="")
         print(" |")
-    print("".join(["-"] * (max_line_length + 3)))
+    print("".join(["-"] * (max_line_length + 4)))

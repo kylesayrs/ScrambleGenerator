@@ -30,7 +30,7 @@ parser.add_argument("--tile_set_path", type=str, default="tile_set_distribution.
 parser.add_argument("--scramble_dir", type=str, default="scrambles")
 
 
-def get_loss(word: str, scramble: List[str], tile_set_distribution: Dict[str, int]) -> float:
+def get_score(word: str, scramble: List[str], tile_set_distribution: Dict[str, int]) -> float:
     new_scramble = scramble + [word]
 
     # calculate character frequency
@@ -39,28 +39,28 @@ def get_loss(word: str, scramble: List[str], tile_set_distribution: Dict[str, in
     # check for overflow
     for char, freq in char_freq.items():
         if freq > tile_set_distribution[char.upper()]:
-            return numpy.inf
+            return numpy.ninf
 
-    # loss is negative gini coeficient
-    gini_loss = (1 - gini(char_freq)) ** 10
+    # score is negative gini coeficient
+    gini_score = (1 - gini(char_freq)) ** 10
 
-    return gini_loss
+    return gini_score
 
 
-def get_losses(
+def get_scores(
     words: List[str],
     scramble: List[str],
     tile_set_distribution: Dict[str, int]
 ) -> Tuple[List[str]]:
     _words = []
-    losses = []
+    scores = []
     for word in words:
-        loss = get_loss(word, scramble, tile_set_distribution)
-        if loss != numpy.inf:
+        score = get_score(word, scramble, tile_set_distribution)
+        if score != numpy.ninf:
             _words.append(word)
-            losses.append(loss)
+            scores.append(score)
 
-    return _words, losses
+    return _words, scores
 
 
 def get_scramble(words_set: set, num_words: int, tile_set_distribution: Dict[str, int]) -> List[str]:
@@ -68,15 +68,15 @@ def get_scramble(words_set: set, num_words: int, tile_set_distribution: Dict[str
     scramble = []
 
     for i in range(num_words):
-        words, losses = get_losses(words, scramble, tile_set_distribution)
+        words, scores = get_scores(words, scramble, tile_set_distribution)
         if len(words) <= 0:
             print("Ran out of viable words")
             return words
 
-        losses_norm = numpy.array(losses) / sum(losses)
+        scores_normed = numpy.array(scores) / sum(scores)
 
-        new_word = numpy.random.choice(words, p=losses_norm)
-        #new_word = words[numpy.argmax(losses_norm)]
+        new_word = numpy.random.choice(words, p=scores_normed)
+        #new_word = words[numpy.argmax(scores_normed)]
         #new_word = numpy.random.choice(words)
 
         scramble.append(new_word)
@@ -115,8 +115,9 @@ if __name__ == "__main__":
     scramble_path = os.path.join(args.scramble_dir, f"{scramble_name}.txt")
     scramble_char_freq = get_character_frequency(scramble)
     print_in_box(
-        f"{scramble_path}\n"
-        f"Gini Coeficient: {gini(scramble_char_freq)}\n"
+        f"Category: {category}\n"
+        f"Answer path: {scramble_path}\n"
+        f"Gini Coeficient: {gini(scramble_char_freq):.3f}\n"
         f"Characters: {json.dumps(scramble_char_freq, indent=4)}"
     )
     plot_scramble_char_freq(scramble)
