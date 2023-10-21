@@ -1,0 +1,5 @@
+scrambles/*
+openai_key.txt
+__pycache__/
+*.pyc
+*.pkl
