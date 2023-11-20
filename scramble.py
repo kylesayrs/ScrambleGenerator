@@ -23,6 +23,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--category", type=str, default=None, help="Category to create scramble for. Defaults to random category")
 parser.add_argument("--num_words", type=int, default=5, help="Number of words in scramble")
 parser.add_argument("--min_word_length", type=int, default=5, help="Minimum word length of words appearing in scramble")
+parser.add_argument("--max_word_length", type=int, default=10, help="Minimum word length of words appearing in scramble")
 
 parser.add_argument("--num_tile_sets", type=int, default=2, help="Multiplier factor for tile set distribution")
 
@@ -115,7 +116,11 @@ if __name__ == "__main__":
     )
 
     # create the scramble
-    words = [word for word in category_sets[category] if len(word) >= args.min_word_length]
+    words = [
+        word
+        for word in category_sets[category]
+        if len(word) >= args.min_word_length and len(word) <= args.max_word_length
+    ]
     scramble = get_scramble(words, args.num_words, tile_set_distribution)
 
     # print results

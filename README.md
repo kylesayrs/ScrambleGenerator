@@ -8,9 +8,9 @@ The scrambles are generated in a way that stochastically minimizes the gini coef
 ## Usage ##
 ```
 usage: scramble.py [-h] [--category CATEGORY] [--num_words NUM_WORDS]
-                   [--min_word_length MIN_WORD_LENGTH] [--num_tile_sets NUM_TILE_SETS]
-                   [--category_sets_path CATEGORY_SETS_PATH] [--tile_set_path TILE_SET_PATH]
-                   [--scramble_dir SCRAMBLE_DIR]
+                   [--min_word_length MIN_WORD_LENGTH] [--max_word_length MAX_WORD_LENGTH]
+                   [--num_tile_sets NUM_TILE_SETS] [--category_sets_path CATEGORY_SETS_PATH]
+                   [--tile_set_path TILE_SET_PATH] [--scramble_dir SCRAMBLE_DIR]
 
 options:
   -h, --help            show this help message and exit
@@ -18,6 +18,8 @@ options:
   --num_words NUM_WORDS
                         Number of words in scramble
   --min_word_length MIN_WORD_LENGTH
+                        Minimum word length of words appearing in scramble
+  --max_word_length MAX_WORD_LENGTH
                         Minimum word length of words appearing in scramble
   --num_tile_sets NUM_TILE_SETS
                         Multiplier factor for tile set distribution
