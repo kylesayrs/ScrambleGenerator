@@ -16,7 +16,7 @@ from utils import (
 parser = argparse.ArgumentParser()
 parser.add_argument("--category", type=str, default=None, help="Category to add words to. Not specifying this will print the current sets")
 parser.add_argument("--num_iterations", type=int, default=5, help="Number of prompt iterations")
-parser.add_argument("--temperature", type=int, default=1.1, help="Model temperature. Higher values yield more creative responses")
+parser.add_argument("--temperature", type=float, default=1.1, help="Model temperature. Higher values yield more creative responses")
 parser.add_argument("--category_sets_path", type=str, default="category_sets.pkl")
 
 
